@@ -2,7 +2,7 @@
 
 var util = require('util');
 var EventEmitter = require('events').EventEmitter;
-var bitcore = require('bitcore-lib');
+var bitcore = require('bitcore-lib-btcp');
 var spawn = require('child_process').spawn;
 
 function SatoshiFireAlarm(options) {
@@ -12,9 +12,10 @@ function SatoshiFireAlarm(options) {
   this.alarmActivated = false;
   this.child = false;
   this.interestingAddresses = [
-    '1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa', //this is the address that the genesis paid its coinbase to. Can't be spent due to a bug in the code.
-    '12c6DSiU4Rq3P4ZxziKxzrL5LmMBrzjrJX', //Block 1
-    '1HLoD9E4SDFFPDiYfNYnkBLQ85Y51J3Zb1' //Block 2
+    //'1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa', //this is the address that the genesis paid its coinbase to. Can't be spent due to a bug in the code.
+    //'12c6DSiU4Rq3P4ZxziKxzrL5LmMBrzjrJX', //Block 1
+    //'1HLoD9E4SDFFPDiYfNYnkBLQ85Y51J3Zb1' //Block 2
+    'b1RXUJgnuxtzHyJ5UTWerh4pNBWcVikESZe'
   ];
   this.node.services.bitcoind.on('tx', this.transactionHandler.bind(this));
 }
@@ -88,6 +89,7 @@ SatoshiFireAlarm.prototype.soundAlarm = function() {
   }
 
   this.alarmActivated = true;
+  console.log('ALARM TRIGGERED!');
   this.child = spawn('alarm', []);
 };
 
@@ -96,6 +98,7 @@ SatoshiFireAlarm.prototype.resetAlarm = function() {
     this.child.kill();
   }
   this.alarmActivated = false;
+  console.log('ALARM OFF!');
 };
 
 module.exports = SatoshiFireAlarm;
